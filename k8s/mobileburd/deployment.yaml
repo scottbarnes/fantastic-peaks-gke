@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobileburd-web
+  namespace: mobileburd-web
+  labels:
+    app: mobileburd-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mobileburd-web
+  template:
+    metadata:
+      labels:
+        app: mobileburd-web
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: web-pool
+      containers:
+        - name: "mobileburd-web"
+          image: docker.io/scottbarnes/mobileburd:latest
+          ports:
+            - name: http
+              containerPort: 80
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1

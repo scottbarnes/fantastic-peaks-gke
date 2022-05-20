@@ -1,0 +1,29 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress
+  namespace: mobileburd-web
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`mobileburd.fishcracker.net`)
+    kind: Rule
+    services:
+    - name: mobileburd-web
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress-websecure
+  namespace: mobileburd-web
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`mobileburd.fishcracker.net`)
+    kind: Rule
+    services:
+    - name: mobileburd-web
+      port: 80
